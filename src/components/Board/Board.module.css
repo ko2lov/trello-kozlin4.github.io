@@ -1,0 +1,13 @@
+.title {
+  width: 100%;
+  font-size: 40px;
+  color: white;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  margin-top: 55px;
+  margin-bottom: 20px;
+}
+.listContainer {
+  display: flex;
+  flex-direction: row;
+}
