@@ -26,8 +26,8 @@ Board Management App is a simple application that allows users to create and man
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/board-management-app.git
-   cd board-management-app
+   git clone https://github.com/ko2lov/trello-kozlin4.github.io.git
+   cd trello-kozlin4.github.io
    ```
 
 2. Install the dependencies:
