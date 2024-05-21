@@ -15,7 +15,8 @@ export const Home = () => {
   const [newBoardTitle, setNewBoardTitle] = useState("");
 
   const handleChange = (e) => {
-    if (newBoardTitle.length < 12) setNewBoardTitle(e.target.value);
+    const newValue = e.target.value.slice(0, 12); // Обрезаем значение до 12 символов
+    setNewBoardTitle(newValue);
   };
 
   const handleSubmit = (e) => {
