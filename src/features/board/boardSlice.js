@@ -23,7 +23,6 @@ export const boardSlice = createSlice({
       return { ...state, [boardID]: newBoard };
     },
     deleteBoard: (state, action) => {
-      debugger;
       const { boardID } = action.payload;
       const newState = Object.fromEntries(
         Object.entries(state).filter(([key]) => key.boardID !== boardID)
@@ -48,13 +47,21 @@ export const boardSlice = createSlice({
       debugger;
       const { boardID, type, droppableIndexStart, droppableIndexEnd } =
         action.payload;
-      if (type !== "list") return state;
+
       const board = state[boardID];
       const lists = board.lists;
-      const draggedList = lists.splice(droppableIndexStart, 1);
-      lists.splice(droppableIndexEnd, 0, ...draggedList);
-      board.lists = lists;
-      return { ...state, [boardID]: board };
+      const draggedList = lists[droppableIndexStart]; // Получаем перетаскиваемый список
+      const updatedLists = [...lists]; // Создаем копию массива списков
+
+      // Удаляем перетаскиваемый список из старого индекса и вставляем в новый
+      updatedLists.splice(droppableIndexStart, 1);
+      updatedLists.splice(droppableIndexEnd, 0, draggedList);
+
+      // Обновляем список в доске
+      const updatedBoard = { ...board, lists: updatedLists };
+
+      // Возвращаем новое состояние, не модифицируя текущее состояние напрямую
+      return { ...state, [boardID]: updatedBoard };
     },
   },
 });

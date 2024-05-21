@@ -17,7 +17,6 @@ const List = React.memo(({ listID, title, cards, index }) => {
   const [editMode, setEditMode] = useState(false);
   const [listTitle, setListTitle] = useState(title);
   const dispatch = useDispatch();
-
   const handleFocus = (e) => {
     e.target.select();
   };

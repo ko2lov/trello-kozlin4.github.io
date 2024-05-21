@@ -32,12 +32,15 @@ export const Home = () => {
   const renderAllBoards = () => {
     return Object.entries(boards).map(([boardID, board]) => {
       return (
-        <div className={styles.thumbnail}>
+        <div key={boardID} className={styles.thumbnail}>
           <NavLink to={`/boards/${boardID}`}>
             <h4 className={styles.title4h}>{board.boardTitle}</h4>
           </NavLink>
-          <IconButton aria-label="delete">
-            <DeleteIcon onClick={(e) => handleDeleteBoard(e, boardID)} />
+          <IconButton
+            aria-label="delete"
+            onClick={(e) => handleDeleteBoard(e, boardID)}
+          >
+            <DeleteIcon />
           </IconButton>
         </div>
       );

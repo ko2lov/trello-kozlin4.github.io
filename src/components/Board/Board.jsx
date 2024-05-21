@@ -28,28 +28,13 @@ const Board = () => {
 
   const board = boards[boardID];
 
-  // const onDragEnd = (result) => {
-  //   const { destination, source, draggableId, type } = result;
-  //   console.log(result);
-  //   if (!destination) return;
-  //   dispatch(
-  //     dragHappened(
-  //       source.droppableId,
-  //       destination.droppableId,
-  //       source.index,
-  //       destination.index,
-  //       draggableId,
-  //       type
-  //     )
-  //   );
-  // };
-
   const onDragEnd = (result) => {
     const { destination, source, draggableId, type } = result;
-
+    console.log(result);
     // Проверяем, если есть destination и тип перетаскиваемого элемента - "list"
     if (destination && type === "list") {
       // Здесь обрабатываем перемещение карточки
+
       dispatch(
         moveList({
           boardID,
@@ -72,11 +57,13 @@ const Board = () => {
       );
     }
   };
+
   if (!board) {
     return <h1 style={{ textAlign: "center" }}>Board not found!</h1>;
   }
 
   const listOrder = board.lists;
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className={styles.title}>{board.boardTitle}</div>
