@@ -6,11 +6,15 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import { addBoard, deleteBoard } from "../../features/board/boardSlice";
 import { setCurrentBoard } from "../../features/currentBoard/currentBoardSlice";
+import { deleteCard } from "../../features/card/cardSlice";
+import { deleteList } from "../../features/list/listSlice";
 
 export const Home = () => {
   const dispatch = useDispatch();
 
   const boards = useSelector((state) => state.boards);
+  const lists = useSelector((state) => state.lists);
+  const cards = useSelector((state) => state.cards);
   dispatch(setCurrentBoard(null));
   const [newBoardTitle, setNewBoardTitle] = useState("");
 
@@ -26,8 +30,32 @@ export const Home = () => {
   };
 
   const handleDeleteBoard = (e, boardID) => {
+    // Получаем список и карточки, связанные с удаляемой доской
+    debugger;
+    const board = boards[boardID];
+    const listIDs = board.lists;
+    // Удаляем карточки из состояния
+
+    listIDs.forEach((listID) => {
+      const list = lists[listID];
+      if (list) {
+        const cardIDs = list.cards;
+        debugger;
+        cardIDs.forEach((cardID) => {
+          if (cards[cardID]) {
+            dispatch(deleteCard(cardID)); // Ваша функция для удаления карточки
+          }
+        });
+      }
+    });
+
+    // Удаляем списки из состояния
+    listIDs.forEach((listID) => {
+      dispatch(deleteList(listID)); // Ваша функция для удаления списка
+    });
+
+    // Удаляем доску из состояния
     dispatch(deleteBoard(boardID));
-    console.log("{etcjc");
   };
 
   const renderAllBoards = () => {

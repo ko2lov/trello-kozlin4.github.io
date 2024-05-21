@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  "list-00": {
-    listID: "list-00",
-    cards: [],
-    listTitle: "myList",
-    boardID: "board-00",
-  },
-};
+// const initialState = {
+//   "list-00": {
+//     listID: "list-00",
+//     cards: ["card-00"],
+//     listTitle: "myList",
+//     boardID: "board-00",
+//   },
+// };
+const initialState = {};
 
 export const listSlice = createSlice({
   name: "lists",

@@ -28,6 +28,7 @@ export const store = configureStore({
   reducer: persistedReducer,
 });
 
+window.store = store;
 // Создание персистора
 export const persistor = persistStore(store);
 

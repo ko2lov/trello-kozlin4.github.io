@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
-const initialState = {
-  "board-00": {
-    boardTitle: "Board",
-    boardID: "board-00",
-    lists: ["list-00"],
-  },
-};
+// const initialState = {
+//   "board-00": {
+//     boardTitle: "Board",
+//     boardID: "board-00",
+//     lists: ["list-00"],
+//   },
+// };
+const initialState = {};
 
 export const boardSlice = createSlice({
   name: "boards",
@@ -23,11 +24,11 @@ export const boardSlice = createSlice({
       return { ...state, [boardID]: newBoard };
     },
     deleteBoard: (state, action) => {
-      const { boardID } = action.payload;
-      const newState = Object.fromEntries(
-        Object.entries(state).filter(([key]) => key.boardID !== boardID)
-      );
-      console.log(newState);
+      const boardID = action.payload;
+
+      const newState = state;
+
+      delete newState[boardID];
       return newState;
     },
     addList: (state, action) => {
@@ -44,7 +45,6 @@ export const boardSlice = createSlice({
       return { ...state, [boardID]: { ...board, lists: newLists } };
     },
     moveList: (state, action) => {
-      debugger;
       const { boardID, type, droppableIndexStart, droppableIndexEnd } =
         action.payload;
 

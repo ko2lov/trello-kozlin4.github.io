@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  "card-00": {
-    text: "kozlin4",
-    cardID: "card-00",
-    listID: "list-00",
-  },
-};
+// const initialState = {
+//   "card-00": {
+//     text: "kozlin4",
+//     cardID: "card-00",
+//     listID: "list-00",
+//   },
+// };
+const initialState = {};
 
 export const cardSlice = createSlice({
   name: "cards",
@@ -31,8 +32,9 @@ export const cardSlice = createSlice({
       };
     },
     deleteCard: (state, action) => {
-      const { cardID } = action.payload;
-      delete state[cardID];
+      const cardID = action.payload;
+      const { [cardID]: _, ...newState } = state; // Использование деструктуризации для удаления карточки
+      return newState;
     },
     // moveCardTwo: (state, action) => {
     //   const {
