@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { Card, Button, Icon } from "@mui/material";
 import Textarea from "react-textarea-autosize";
+import CloseIcon from "@mui/icons-material/Close";
+import IconButton from "@mui/material/IconButton";
 
 const Container = styled.div`
   width: 284px;
@@ -56,7 +58,9 @@ const FormComponent = ({ list, text = "", onChange, closeForm, children }) => {
       </StyledCard>
       <ButtonContainer>
         {children}
-        <StyledIcon onMouseDown={closeForm}>close</StyledIcon>
+        <IconButton onMouseDown={closeForm}>
+          <CloseIcon />
+        </IconButton>
       </ButtonContainer>
     </Container>
   );
