@@ -1,70 +1,91 @@
-# Getting Started with Create React App
+# Board Management App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+Board Management App is a simple application that allows users to create and manage boards, lists, and cards, similar to Trello. Users can add, delete, and rearrange items within the app. This project serves as a demonstration of state management using Redux with persistence and integration with React Router for navigation.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- Create, edit, and delete boards.
+- Add lists to boards and move them around.
+- Add cards to lists and manage their order.
+- Persist state across page reloads using `redux-persist`.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Technologies Used
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **React**: A JavaScript library for building user interfaces.
+- **Redux**: A predictable state container for JavaScript apps.
+- **redux-persist**: A library to persist and rehydrate a Redux store.
+- **React Router**: A library for routing in React applications.
+- **@reduxjs/toolkit**: The official, recommended way to write Redux logic.
+- **Material-UI**: A popular React UI framework.
+- **Immer**: A library to work with immutable state in a more convenient way.
 
-### `npm test`
+## Installation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Clone the repository:
 
-### `npm run build`
+   ```bash
+   git clone https://github.com/yourusername/board-management-app.git
+   cd board-management-app
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Install the dependencies:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   ```bash
+   npm install
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Start the development server:
 
-### `npm run eject`
+   ```bash
+   npm start
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+4. Open your browser and navigate to `http://localhost:3000` to view the app.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Project Structure
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **src**
+  - **components**: Contains React components used throughout the app.
+  - **features**: Contains Redux slices for different features (boards, lists, cards, etc.).
+  - **store**: Contains the Redux store configuration with persistence.
+  - **App.js**: The main component that sets up routing.
+  - **index.js**: The entry point of the application.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Key Files
 
-## Learn More
+### `src/store/store.js`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+This file sets up the Redux store with persistence using `redux-persist`:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```javascript
+import { configureStore } from "@reduxjs/toolkit";
+import { boardSlice } from "../features/board/boardSlice";
+import { listSlice } from "../features/list/listSlice";
+import { currentBoardSlice } from "../features/currentBoard/currentBoardSlice";
+import { cardSlice } from "../features/card/cardSlice";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import { combineReducers } from "redux";
 
-### Code Splitting
+const persistConfig = {
+  key: "root",
+  storage,
+};
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+const rootReducer = combineReducers({
+  boards: boardSlice.reducer,
+  lists: listSlice.reducer,
+  cards: cardSlice.reducer,
+  currentBoard: currentBoardSlice.reducer,
+});
 
-### Analyzing the Bundle Size
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+export const store = configureStore({
+  reducer: persistedReducer,
+});
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+export const persistor = persistStore(store);
+```
