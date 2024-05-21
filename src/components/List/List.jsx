@@ -1,19 +1,23 @@
 import React, { useState } from "react";
-// import { Droppable, Draggable } from "react-beautiful-dnd";
-import { connect, useDispatch } from "react-redux";
-import { editListTitle } from "../../features/list/listSlice";
-import { deleteList as deleteListFromListSlice } from "../../features/list/listSlice";
+import { Droppable, Draggable } from "react-beautiful-dnd";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  editListTitle,
+  deleteList as deleteListFromListSlice,
+} from "../../features/list/listSlice";
 import { deleteList as deleteListFromBoardSlice } from "../../features/board/boardSlice";
-// import { editListTitle, deleteList, deleteCard } from "../actions";
 import styles from "./List.module.css";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
+import CardComponent from "../Card/CardComponent";
+import CreateComponent from "../CreateComponent/CreateComponent";
 
-const List = ({ key, listID, title, cards, index }) => {
+const List = React.memo(({ listID, title, cards, index }) => {
+  const currentBoard = useSelector((state) => state.currentBoard);
   const [editMode, setEditMode] = useState(false);
   const [listTitle, setListTitle] = useState(title);
-
   const dispatch = useDispatch();
+
   const handleFocus = (e) => {
     e.target.select();
   };
@@ -24,53 +28,77 @@ const List = ({ key, listID, title, cards, index }) => {
   };
 
   const handleCloseEdit = (e) => {
+    dispatch(editListTitle({ listID, newListTitle: listTitle }));
     setEditMode(false);
-    dispatch(editListTitle(listID, listTitle));
   };
 
   const handleDeleteList = () => {
-    //console.log("KKList: delete list: ", listID);
     dispatch(deleteListFromListSlice(listID));
-    dispatch(deleteListFromBoardSlice(listID));
+    dispatch(deleteListFromBoardSlice({ boardID: currentBoard, listID }));
   };
 
-  const renderEditInput = () => {
-    return (
-      <input
-        className={styles.styledInput}
-        type="text"
-        value={listTitle}
-        onChange={handleChange}
-        autoFocus
-        onFocus={handleFocus}
-        onBlur={handleCloseEdit}
-      />
-    );
-  };
+  const renderEditInput = () => (
+    <input
+      className={styles.styledInput}
+      type="text"
+      value={listTitle}
+      onChange={handleChange}
+      autoFocus
+      onFocus={handleFocus}
+      onBlur={handleCloseEdit}
+    />
+  );
 
   return (
-    <div>
-      <div className={styles.listContainer}>
-        <div>
-          <div>
-            {editMode ? (
-              renderEditInput()
-            ) : (
-              <div
-                className={styles.titleContainer}
-                onClick={() => setEditMode(true)}
-              >
-                <div className={styles.listTitle}>{listTitle}</div>
-                <IconButton aria-label="delete">
-                  <DeleteIcon onClick={handleDeleteList}>delete</DeleteIcon>
-                </IconButton>
+    <Draggable draggableId={String(listID)} index={index}>
+      {(provided) => (
+        <div
+          className={styles.listContainer}
+          {...provided.draggableProps}
+          ref={provided.innerRef}
+          {...provided.dragHandleProps}
+        >
+          <Droppable droppableId={String(listID)} type="card">
+            {(provided) => (
+              <div>
+                <div>
+                  {editMode ? (
+                    renderEditInput()
+                  ) : (
+                    <div
+                      className={styles.titleContainer}
+                      onClick={() => setEditMode(true)}
+                    >
+                      <div className={styles.listTitle}>{listTitle}</div>
+                      <IconButton
+                        aria-label="delete"
+                        onClick={handleDeleteList}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </div>
+                  )}
+                </div>
+                <div {...provided.droppableProps} ref={provided.innerRef}>
+                  {cards.map((card, index) => (
+                    <CardComponent
+                      key={card.cardID}
+                      index={index}
+                      text={card.text}
+                      cardID={card.cardID}
+                      listID={listID}
+                    />
+                  ))}
+                  {provided.placeholder}
+                  <CreateComponent listID={listID} />
+                </div>
               </div>
             )}
-          </div>
-          <div></div>
+          </Droppable>
         </div>
-      </div>
-    </div>
+      )}
+    </Draggable>
   );
-};
+});
+
 export default List;

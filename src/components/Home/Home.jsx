@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "./Home.module.css";
 import { NavLink } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -26,6 +26,7 @@ export const Home = () => {
 
   const handleDeleteBoard = (e, boardID) => {
     dispatch(deleteBoard(boardID));
+    console.log("{etcjc");
   };
 
   const renderAllBoards = () => {

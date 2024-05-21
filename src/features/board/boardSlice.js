@@ -3,8 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 const initialState = {
   "board-00": {
     boardTitle: "Board",
-    boardID: "1",
-    lists: ["lists-00"],
+    boardID: "board-00",
+    lists: ["list-00"],
   },
 };
 
@@ -23,9 +23,12 @@ export const boardSlice = createSlice({
       return { ...state, [boardID]: newBoard };
     },
     deleteBoard: (state, action) => {
+      debugger;
       const { boardID } = action.payload;
-      const newState = { ...state };
-      delete newState[boardID];
+      const newState = Object.fromEntries(
+        Object.entries(state).filter(([key]) => key.boardID !== boardID)
+      );
+      console.log(newState);
       return newState;
     },
     addList: (state, action) => {
@@ -36,12 +39,25 @@ export const boardSlice = createSlice({
     },
     deleteList: (state, action) => {
       const { boardID, listID } = action.payload;
+      console.log(boardID, listID);
       const board = state[boardID];
       const newLists = board.lists.filter((id) => id !== listID);
       return { ...state, [boardID]: { ...board, lists: newLists } };
     },
+    moveList: (state, action) => {
+      debugger;
+      const { boardID, type, droppableIndexStart, droppableIndexEnd } =
+        action.payload;
+      if (type !== "list") return state;
+      const board = state[boardID];
+      const lists = board.lists;
+      const draggedList = lists.splice(droppableIndexStart, 1);
+      lists.splice(droppableIndexEnd, 0, ...draggedList);
+      board.lists = lists;
+      return { ...state, [boardID]: board };
+    },
   },
 });
 
-export const { addBoard, deleteBoard, addList, deleteList } =
+export const { addBoard, deleteBoard, addList, deleteList, moveList } =
   boardSlice.actions;
